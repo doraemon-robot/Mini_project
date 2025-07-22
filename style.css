@@ -1,0 +1,933 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #0a0a14;
+    overflow: hidden;
+    height: 100vh;
+    perspective: 1500px;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.ironman-container {
+    position: relative;
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6));
+    cursor: grab;
+}
+
+.ironman-container:active {
+    cursor: grabbing;
+}
+
+.ironman-helmet {
+    width: 320px;
+    height: 400px;
+    position: relative;
+    transform-style: preserve-3d;
+    margin: 0 auto;
+    transition: transform 0.1s linear;
+    transform: rotateX(-10deg); /* Default angle */
+}
+
+/* Base element for each part */
+.ironman-helmet > div {
+    position: absolute;
+    transform-style: preserve-3d;
+}
+
+/* RED PARTS */
+.helmet-top {
+    width: 100%;
+    height: 60%;
+    background: linear-gradient(160deg, #d32f2f, #b71c1c 70%, #7f0000);
+    border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+    box-shadow: inset 0 15px 25px rgba(255, 255, 255, 0.2), inset 0 -10px 20px rgba(0, 0, 0, 0.5);
+    transform: translateZ(10px);
+}
+.helmet-top::before { /* Forehead plate */
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    width: 60%;
+    height: 35%;
+    background: linear-gradient(150deg, #e57373, #c62828);
+    border-radius: 50% 50% 20px 20px;
+    transform: translateX(-50%);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+
+/* GOLD PARTS */
+.face-plate {
+    width: 90%;
+    height: 70%;
+    top: 25%;
+    left: 5%;
+    background: linear-gradient(160deg, #ffeb3b, #fbc02d 70%, #f57f17);
+    border-radius: 20% 20% 50% 50% / 20% 20% 60% 60%;
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 80% 45%, 20% 45%, 0 50%);
+    box-shadow: inset 0 10px 20px rgba(255, 255, 255, 0.3), inset 0 -5px 15px rgba(0,0,0,0.3);
+    transform: translateZ(60px);
+}
+.cheek {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: -10%;
+    background: linear-gradient(to bottom, #fdd835, #f9a825);
+    box-shadow: inset 0 5px 10px rgba(255,255,255,0.2);
+}
+.cheek.left {
+    left: 0;
+    border-radius: 0 50% 50% 0 / 0 30% 60% 0;
+    clip-path: polygon(0 20%, 100% 40%, 100% 100%, 30% 100%);
+    transform: rotateY(-15deg) translateZ(-10px);
+}
+.cheek.right {
+    right: 0;
+    border-radius: 50% 0 0 50% / 30% 0 0 60%;
+    clip-path: polygon(0 40%, 100% 20%, 70% 100%, 0 100%);
+    transform: rotateY(15deg) translateZ(-10px);
+}
+
+/* JAW AND MOUTH */
+.jaw {
+    width: 60%;
+    height: 40%;
+    top: 60%;
+    left: 20%;
+    background: linear-gradient(180deg, #cfd8dc, #b0bec5 40%, #78909c);
+    border-radius: 0 0 50% 50%;
+    box-shadow: inset 0 -8px 15px rgba(0,0,0,0.4);
+    transform: translateZ(50px);
+}
+.mouth-grille {
+    position: absolute;
+    width: 80%;
+    height: 50%;
+    top: 10%;
+    left: 10%;
+    background: #455a64;
+    border-radius: 5px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    cursor: pointer;
+}
+.grille-line {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #78909c, #b0bec5, #78909c);
+    border-radius: 1px;
+}
+
+/* EYES */
+.eye-socket {
+    position: absolute;
+    top: 45%;
+    width: 30%;
+    height: 10%;
+    background: #111;
+    border: 2px solid #212121;
+    transform: translateZ(65px);
+    cursor: pointer;
+}
+.left-eye {
+    left: 12%;
+    transform: skew(-20deg) translateZ(65px);
+    border-radius: 10px 25px 5px 15px;
+}
+.right-eye {
+    right: 12%;
+    transform: skew(20deg) translateZ(65px);
+    border-radius: 25px 10px 15px 5px;
+}
+.eye-glow {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-radius: inherit;
+    box-shadow: 0 0 15px 5px #76e8ff, 0 0 25px 10px #00aeff, inset 0 0 10px #fff;
+    animation: eyeGlow 2s infinite alternate;
+}
+@keyframes eyeGlow {
+    from { box-shadow: 0 0 15px 5px #76e8ff, 0 0 25px 10px #00aeff, inset 0 0 10px #fff; }
+    to { box-shadow: 0 0 20px 8px #76e8ff, 0 0 35px 15px #00aeff, inset 0 0 15px #fff; }
+}
+
+/* INTERACTIVE STATES */
+.ironman-helmet.listening .eye-glow {
+    animation: listeningPulse 1s infinite;
+}
+@keyframes listeningPulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.ironman-helmet.speaking .mouth-grille {
+    background: #607d8b;
+}
+
+/* ARC REACTOR */
+.arc-reactor {
+    position: fixed;
+    bottom: -150px; /* Adjusted from 30px to move it lower */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #FFF 0%, #B0E0E6 20%, #00BFFF 50%, #005F7F 80%);
+    box-shadow: 
+        0 0 15px #00BFFF,
+        0 0 30px #00BFFF,
+        0 0 45px #00BFFF,
+        inset 0 0 20px #005F7F;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+/* HUD and other UI elements */
+.hud-element {
+    position: fixed;
+    color: #00BFFF;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 5px #00BFFF;
+    opacity: 0.8;
+    z-index: 1000;
+    background: rgba(0, 10, 20, 0.5);
+    border: 1px solid #00BFFF;
+    padding: 5px 10px;
+    backdrop-filter: blur(3px);
+}
+
+.power-indicator {
+    top: 20px;
+    right: 20px;
+    font-size: 12px;
+    display: none; /* HIDE OLD POWER INDICATOR */
+}
+
+.status-display {
+    bottom: 20px;
+    left: 20px;
+    font-size: 10px;
+}
+
+.chat-container {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    max-height: 200px;
+    background: rgba(0, 10, 20, 0.8);
+    border: 1px solid #00BFFF;
+    border-radius: 5px;
+    padding: 10px;
+    color: #EFEFEF;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.chat-container.visible {
+    opacity: 1;
+}
+
+.chat-message {
+    margin: 5px 0;
+    padding: 5px;
+    border-left: 2px solid #00BFFF;
+    padding-left: 10px;
+}
+
+.transcription-display {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    max-width: 800px;
+    background: rgba(0, 20, 40, 0.7);
+    border-top: 1px solid #00BFFF;
+    padding: 10px 20px;
+    color: #00BFFF;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1100;
+    text-shadow: 0 0 8px #00BFFF;
+}
+
+.transcription-display.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.boot-sequence {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #00BFFF;
+    font-family: 'Courier New', monospace;
+    animation: fadeOut 3s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; pointer-events: none; }
+}
+
+/* --- NEW: Talkemon Landing Page Styles --- */
+
+/* Import Pixel Font */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.login-container {
+    position: relative;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: rgba(0, 10, 20, 0.6);
+    border: 1px solid #00BFFF;
+    box-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 2s ease-out;
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.pixel-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 3rem;
+    color: #FFF;
+    text-shadow: 0 0 10px #00BFFF, 0 0 20px #00BFFF, 0 0 40px #DC143C;
+    margin-bottom: 10px;
+    position: relative;
+    animation: flicker 3s infinite alternate;
+}
+
+/* Glitch effect for the title */
+.pixel-title::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #FFF;
+    text-shadow: -2px 0 #DC143C;
+    clip-path: inset(50% 0 50% 0);
+    animation: glitch 4s infinite;
+}
+
+.tagline {
+    color: #00BFFF;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+    animation: fadeIn 3s ease-out;
+}
+
+#registerForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.hud-input {
+    width: 100%;
+    padding: 15px;
+    background: rgba(0, 20, 40, 0.7);
+    border: 1px solid #00BFFF;
+    border-radius: 3px;
+    color: #EFEFEF;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 10px rgba(0, 191, 255, 0.3);
+}
+
+.hud-input:focus {
+    outline: none;
+    border-color: #FFF;
+    box-shadow: 0 0 15px #00BFFF, inset 0 0 15px rgba(0, 191, 255, 0.5);
+}
+
+.hud-button {
+    padding: 15px 30px;
+    background: transparent;
+    border: 2px solid #DC143C;
+    color: #FFF;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 10px #DC143C;
+}
+
+.hud-button:hover {
+    background: #DC143C;
+    box-shadow: 0 0 20px #DC143C;
+    color: #000;
+}
+
+.interface-link {
+    margin-top: 40px;
+}
+
+.interface-link a {
+    color: #00BFFF;
+    font-family: 'Courier New', monospace;
+    text-decoration: none;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+.interface-link a:hover {
+    color: #FFF;
+    text-shadow: 0 0 10px #00BFFF;
+}
+
+/* Animation Keyframes */
+@keyframes flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        text-shadow: 0 0 10px #00BFFF, 0 0 20px #00BFFF, 0 0 40px #DC143C, 0 0 70px #DC143C;
+    }
+    20%, 24%, 55% {
+        text-shadow: none;
+    }
+}
+
+@keyframes glitch {
+    2%, 64% { transform: translate(2px, 0) skew(0deg); }
+    4%, 60% { transform: translate(-2px, 0) skew(0deg); }
+    62% { transform: translate(0, 0) skew(5deg); }
+}
+
+/* --- NEW: Avenger Selection Styles --- */
+
+.avenger-selector {
+    position: fixed;
+    top: 20px; /* MOVED TO TOP */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    background: rgba(0, 10, 20, 0.7);
+    padding: 10px;
+    border: 1px solid #00BFFF;
+    border-radius: 10px;
+    z-index: 1200;
+    backdrop-filter: blur(5px);
+}
+
+.avenger-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #00BFFF;
+    transition: all 0.3s ease;
+    background: rgba(0, 10, 20, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.avenger-icon:hover, .avenger-icon.active {
+    border-color: #FFF;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #FFF;
+}
+
+/* NEW: Character Icon Images */
+.icon-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+}
+
+.iron-man-icon {
+    background: radial-gradient(circle, #FFD700, #FFA500);
+    position: relative;
+}
+.iron-man-icon::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 8px;
+    height: 6px;
+    background: #00BFFF;
+    box-shadow: 16px 0 0 #00BFFF, 0 12px 0 #FF0000, 16px 12px 0 #FF0000;
+    border-radius: 2px;
+}
+
+.cap-icon {
+    background: linear-gradient(45deg, #1464F4, #FFFFFF, #DC143C);
+    position: relative;
+}
+.cap-icon::before {
+    content: 'A';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFF;
+    font-weight: bold;
+    font-size: 16px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.thor-icon {
+    background: linear-gradient(45deg, #FFD700, #C0C0C0);
+    position: relative;
+}
+.thor-icon::before {
+    content: '⚡';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    color: #FFF;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.hulk-icon {
+    background: radial-gradient(circle, #6B8E23, #2E5A2E);
+    position: relative;
+}
+.hulk-icon::before {
+    content: '✊';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    color: #BFFF00;
+}
+
+.spiderman-icon {
+    background: radial-gradient(circle, #DC143C, #8B0000);
+    position: relative;
+}
+.spiderman-icon::before {
+    content: '🕷️';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    color: #FFF;
+}
+
+/* --- DELETE ALL THOR STYLES AND REPLACE WITH SPIDERMAN --- */
+
+/* --- NEW: REALISTIC SPIDER-MAN --- */
+.spiderman-face { 
+    width: 350px; 
+    height: 420px; 
+    position: relative;
+    filter: drop-shadow(0 0 30px rgba(220, 20, 60, 0.4));
+}
+
+.spiderman-mask {
+    width: 100%; 
+    height: 100%; 
+    background: 
+        radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.3) 0%, transparent 50%),
+        linear-gradient(135deg, #DC143C 0%, #8B0000 50%, #4A0000 100%);
+    border-radius: 45% 45% 40% 40%;
+    box-shadow: 
+        inset 0 0 50px rgba(0,0,0,0.6),
+        inset 0 20px 30px rgba(255,255,255,0.1),
+        0 0 40px rgba(220, 20, 60, 0.3);
+    position: relative;
+    border: 2px solid rgba(139, 0, 0, 0.8);
+}
+
+/* Enhanced metallic web pattern */
+.spiderman-web-pattern {
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    border-radius: inherit;
+    background-image: 
+        /* Main structural web lines with metallic effect */
+        linear-gradient(90deg, transparent 47%, rgba(0,0,0,0.4) 48%, rgba(255,255,255,0.1) 49%, rgba(0,0,0,0.4) 50%, rgba(255,255,255,0.1) 51%, rgba(0,0,0,0.4) 52%, transparent 53%),
+        linear-gradient(90deg, transparent 22%, rgba(0,0,0,0.3) 23%, rgba(255,255,255,0.08) 24%, rgba(0,0,0,0.3) 25%, rgba(255,255,255,0.08) 26%, rgba(0,0,0,0.3) 27%, transparent 28%),
+        linear-gradient(90deg, transparent 72%, rgba(0,0,0,0.3) 73%, rgba(255,255,255,0.08) 74%, rgba(0,0,0,0.3) 75%, rgba(255,255,255,0.08) 76%, rgba(0,0,0,0.3) 77%, transparent 78%),
+        
+        /* Horizontal metallic web lines */
+        linear-gradient(0deg, transparent 22%, rgba(0,0,0,0.3) 23%, rgba(255,255,255,0.08) 24%, rgba(0,0,0,0.3) 25%, rgba(255,255,255,0.08) 26%, rgba(0,0,0,0.3) 27%, transparent 28%),
+        linear-gradient(0deg, transparent 47%, rgba(0,0,0,0.4) 48%, rgba(255,255,255,0.1) 49%, rgba(0,0,0,0.4) 50%, rgba(255,255,255,0.1) 51%, rgba(0,0,0,0.4) 52%, transparent 53%),
+        linear-gradient(0deg, transparent 72%, rgba(0,0,0,0.3) 73%, rgba(255,255,255,0.08) 74%, rgba(0,0,0,0.3) 75%, rgba(255,255,255,0.08) 76%, rgba(0,0,0,0.3) 77%, transparent 78%),
+        
+        /* Radial web pattern with depth */
+        radial-gradient(ellipse at 50% 45%, transparent 30%, rgba(0,0,0,0.2) 31%, rgba(255,255,255,0.05) 32%, rgba(0,0,0,0.2) 33%, transparent 34%),
+        radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(0,0,0,0.25) 51%, rgba(255,255,255,0.08) 52%, rgba(0,0,0,0.25) 53%, transparent 54%),
+        radial-gradient(ellipse at 50% 45%, transparent 70%, rgba(0,0,0,0.2) 71%, rgba(255,255,255,0.05) 72%, rgba(0,0,0,0.2) 73%, transparent 74%);
+    animation: webShimmer 3s ease-in-out infinite alternate;
+}
+
+@keyframes webShimmer {
+    0% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+/* Metallic Spider-Man eyes with advanced styling */
+.spiderman-eye {
+    position: absolute; 
+    top: 140px; 
+    width: 85px; 
+    height: 65px;
+    background: 
+        radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 40%, rgba(240,240,240,0.3) 100%);
+    border-radius: 60% 40% 40% 60%;
+    box-shadow: 
+        inset 0 0 20px rgba(0,0,0,0.4),
+        inset 0 5px 15px rgba(255,255,255,0.3),
+        0 0 15px rgba(255,255,255,0.2),
+        0 2px 8px rgba(0,0,0,0.3);
+    overflow: hidden;
+    border: 1px solid rgba(200,200,200,0.5);
+}
+
+.spiderman-eye.left { 
+    left: 45px; 
+    transform: rotate(-15deg);
+    border-radius: 70% 30% 30% 70%;
+}
+
+.spiderman-eye.right { 
+    right: 45px; 
+    transform: rotate(15deg);
+    border-radius: 30% 70% 70% 30%;
+}
+
+/* Advanced eye lens with reflections */
+.spiderman-eye-lens {
+    width: 100%; 
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 25% 25%, rgba(255,255,255,0.8) 0%, transparent 30%),
+        radial-gradient(ellipse at 70% 70%, rgba(255,255,255,0.4) 0%, transparent 40%),
+        linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+    border-radius: inherit;
+    animation: spideyBlink 6s infinite;
+}
+
+@keyframes spideyBlink {
+    0%, 92%, 100% { transform: scaleY(1); opacity: 1; }
+    95% { transform: scaleY(0.1); opacity: 0.8; }
+}
+
+/* Metallic nose area */
+.spiderman-nose-area {
+    position: absolute; 
+    top: 200px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    width: 35px; 
+    height: 45px;
+    background: 
+        linear-gradient(to bottom, 
+            rgba(0,0,0,0.1), 
+            rgba(0,0,0,0.3) 50%, 
+            rgba(0,0,0,0.1));
+    border-radius: 50%;
+    box-shadow: inset 0 2px 5px rgba(255,255,255,0.1);
+}
+
+/* Enhanced mouth area */
+.spiderman-mouth-area {
+    position: absolute; 
+    top: 280px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    width: 90px; 
+    height: 35px;
+    background: 
+        radial-gradient(ellipse at center, 
+            rgba(0,0,0,0.2) 0%, 
+            rgba(0,0,0,0.1) 70%, 
+            transparent 100%);
+    border-radius: 50%;
+    box-shadow: 
+        inset 0 5px 15px rgba(0,0,0,0.3),
+        inset 0 -2px 5px rgba(255,255,255,0.1);
+}
+
+/* Metallic neck collar */
+.spiderman-mask::before {
+    content: '';
+    position: absolute; 
+    bottom: -25px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    width: 70px; 
+    height: 25px;
+    background: 
+        linear-gradient(135deg, 
+            #B22222 0%, 
+            #8B0000 50%, 
+            #4A0000 100%);
+    border-radius: 15px 15px 0 0;
+    box-shadow: 
+        0 -5px 15px rgba(0,0,0,0.4),
+        inset 0 3px 8px rgba(255,255,255,0.2);
+    border: 1px solid rgba(139, 0, 0, 0.8);
+}
+
+/* Enhanced neck area */
+.spiderman-mask::after {
+    content: '';
+    position: absolute; 
+    bottom: -50px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    width: 110px; 
+    height: 50px;
+    background: 
+        linear-gradient(to bottom, 
+            #DC143C 0%, 
+            #8B0000 70%, 
+            #4A0000 100%);
+    border-radius: 0 0 25px 25px;
+    box-shadow: 
+        0 5px 20px rgba(0,0,0,0.4),
+        inset 0 5px 15px rgba(255,255,255,0.1);
+    border: 1px solid rgba(139, 0, 0, 0.6);
+}
+
+/* Enhanced hover effects for Spider-Man */
+.spiderman-container:hover .spiderman-mask {
+    box-shadow: 
+        inset 0 0 50px rgba(0,0,0,0.6),
+        inset 0 20px 30px rgba(255,255,255,0.1),
+        0 0 60px rgba(220, 20, 60, 0.5);
+    transform: scale(1.02);
+    transition: all 0.3s ease;
+}
+
+.spiderman-container:hover .spiderman-eye-lens {
+    animation: spideyFocus 0.8s ease infinite;
+}
+
+@keyframes spideyFocus {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Spider sense effect */
+.spiderman-container.active .spiderman-mask {
+    animation: spiderSense 2s ease-in-out infinite alternate;
+}
+
+@keyframes spiderSense {
+    0% { 
+        box-shadow: 
+            inset 0 0 50px rgba(0,0,0,0.6),
+            inset 0 20px 30px rgba(255,255,255,0.1),
+            0 0 40px rgba(220, 20, 60, 0.3);
+    }
+    100% { 
+        box-shadow: 
+            inset 0 0 50px rgba(0,0,0,0.6),
+            inset 0 20px 30px rgba(255,255,255,0.1),
+            0 0 60px rgba(220, 20, 60, 0.6);
+    }
+}
+
+/* --- NEW: REALISTIC CAPTAIN AMERICA --- */
+.cap-face { width: 320px; height: 420px; position: relative; }
+.cap-helmet {
+    width: 100%; height: 65%; background: linear-gradient(145deg, #1464F4, #0B3A8D);
+    border-radius: 50% 50% 20% 20% / 60% 60% 15% 15%; position: absolute; top: 0;
+    box-shadow: inset 0 10px 20px rgba(255,255,255,0.2), inset 0 -10px 20px rgba(0,0,0,0.5);
+}
+.cap-a-symbol {
+    position: absolute; top: 50px; left: 50%; transform: translateX(-50%);
+    font-family: 'Arial Black', sans-serif; font-size: 70px; color: #E0E0E0;
+    text-shadow: 1px 1px 0 #FFF, -1px -1px 3px rgba(0,0,0,0.5);
+}
+.cap-wing {
+    position: absolute; width: 70px; height: 35px; background: linear-gradient(135deg, #FFFFFF, #B0B0B0);
+    top: 80px; border: 1px solid #888; border-radius: 5px 20px 5px 20px;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.4);
+}
+.cap-wing.left { left: -40px; transform: rotate(-15deg); }
+.cap-wing.right { right: -40px; transform: rotate(15deg); }
+.cap-skin {
+    position: absolute; top: 200px; width: 100%; height: 60%;
+    background: linear-gradient(135deg, #F4C2A1, #D2B48C); border-radius: 0 0 45% 45%;
+    box-shadow: inset 0 5px 15px rgba(0,0,0,0.3);
+}
+.cap-brow {
+    position: absolute; top: 20px; width: 35%; height: 15px;
+    background: rgba(139,69,19,0.3); border-radius: 50%;
+}
+.cap-brow.left { left: 15%; }
+.cap-brow.right { right: 15%; }
+.cap-eye {
+    position: absolute; top: 35px; width: 35px; height: 18px;
+    background: #FFF; border-radius: 50%; border: 1px solid #8B4513;
+}
+.cap-eye.left { left: 25%; }
+.cap-eye.right { right: 25%; }
+.cap-eye-iris {
+    width: 12px; height: 12px; margin: 3px auto; border-radius: 50%;
+    background: radial-gradient(circle, #87CEEB, #4682B4);
+}
+.cap-eye-pupil { width: 5px; height: 5px; background: #000; border-radius: 50%; margin: 3px auto; }
+.cap-nose {
+    position: absolute; top: 55px; left: 50%; transform: translateX(-50%);
+    width: 30px; height: 40px; background: linear-gradient(to right, #D2B48C, #F4C2A1, #D2B48C);
+    border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.cap-mouth {
+    position: absolute; top: 100px; left: 50%; transform: translateX(-50%);
+    width: 40px; height: 8px; background: #8B4513; border-radius: 5px;
+    box-shadow: inset 0 2px 3px rgba(0,0,0,0.5);
+}
+.cap-chin {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    width: 60px; height: 30px; background: #D2B48C; border-radius: 50%;
+}
+
+/* --- NEW: REALISTIC HULK --- */
+.hulk-face { width: 380px; height: 420px; position: relative; }
+.hulk-skin {
+    width: 100%; height: 100%; background: linear-gradient(135deg, #6B8E23, #2E5A2E);
+    border-radius: 45% 45% 40% 40%; box-shadow: inset 0 0 40px #1A472A; position: absolute;
+}
+.hulk-hair {
+    position: absolute; top: -40px; width: 100%; height: 180px;
+    background: linear-gradient(to bottom, #1A1A1A, #000); border-radius: 50% 50% 20% 20%;
+}
+.hulk-brow-ridge {
+    position: absolute; top: 100px; left: 50%; transform: translateX(-50%);
+    width: 90%; height: 60px; background: linear-gradient(to bottom, #2E5A2E, #1A472A);
+    border-radius: 15px; box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+}
+.hulk-forehead-vein {
+    position: absolute; top: 80px; left: 20px; width: 8px; height: 80px;
+    background: #1A472A; border-radius: 5px; transform: rotate(20deg);
+}
+.hulk-eye {
+    position: absolute; top: 150px; width: 40px; height: 20px;
+    background: #1A472A; border-radius: 50%; box-shadow: inset 0 2px 5px #000;
+}
+.hulk-eye.left { left: 90px; transform: rotate(-5deg); }
+.hulk-eye.right { right: 90px; transform: rotate(5deg); }
+.hulk-eye-iris {
+    width: 12px; height: 12px; margin: 4px auto; border-radius: 50%;
+    background: radial-gradient(circle, #BFFF00, #6B8E23); box-shadow: 0 0 8px #BFFF00;
+}
+.hulk-eye-pupil { width: 5px; height: 5px; background: #000; border-radius: 50%; margin: 3px auto; }
+.hulk-nose {
+    position: absolute; top: 190px; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 50px; background: linear-gradient(to bottom, #2E5A2E, #1A472A);
+    border-radius: 10px 10px 30% 30%;
+}
+.hulk-cheek-muscle {
+    position: absolute; top: 200px; width: 100px; height: 80px;
+    background: radial-gradient(ellipse, #4A6B4A 0%, transparent 70%); border-radius: 50%;
+}
+.hulk-cheek-muscle.left { left: 20px; }
+.hulk-cheek-muscle.right { right: 20px; }
+.hulk-mouth {
+    position: absolute; top: 270px; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 30px; background: #1A472A; border-radius: 5px 5px 15px 15px;
+    box-shadow: inset 0 3px 8px #000;
+}
+.hulk-teeth {
+    width: 80%; height: 8px; background: #E0E0E0; margin: 5px auto; border-radius: 2px;
+}
+.hulk-jaw {
+    position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+    width: 85%; height: 80px; background: #2E5A2E; border-radius: 50%;
+}
+.hulk-chin {
+    position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 60px; background: #4A6B4A; border-radius: 50%;
+}
+
+/* --- FACE VISIBILITY CONTROL --- */
+.avenger-face {
+    display: none; /* Hide all faces by default */
+}
+
+.avenger-face.active {
+    display: block; /* ONLY show the active face */
+}
+
+/* Ensure all containers are positioned correctly */
+.ironman-container,
+.captain-america-container,
+.spiderman-container,
+.hulk-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.rotatable-face {
+    transition: transform 0.1s ease;
+    transform-style: preserve-3d;
+}

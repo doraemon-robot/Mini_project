@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avengers Mask Selector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- MOVED: Avenger Selector UI with Character Images -->
+    <div class="avenger-selector">
+        <div class="avenger-icon active" data-avenger="iron-man" title="Iron Man">
+            <div class="icon-image iron-man-icon"></div>
+        </div>
+        <div class="avenger-icon" data-avenger="captain-america" title="Captain America">
+            <div class="icon-image cap-icon"></div>
+        </div>
+        <div class="avenger-icon" data-avenger="spiderman" title="Spider-Man">
+            <div class="icon-image spiderman-icon"></div>
+        </div>
+        <div class="avenger-icon" data-avenger="hulk" title="Hulk">
+            <div class="icon-image hulk-icon"></div>
+        </div>
+    </div>
+
+    <!-- NEW: Universal Power Status Display -->
+    <div class="power-status-display">
+        <div class="power-bar">
+            <div class="power-fill"></div>
+        </div>
+        <div class="power-text">POWER: <span id="power-percentage">100</span>%</div>
+    </div>
+
+    <div class="stars"></div>
+
+    <!-- Iron Man Face -->
+    <div class="ironman-container avenger-face" data-avenger="iron-man">
+        <div class="ironman-helmet rotatable-face">
+            <div class="helmet-back"></div>
+            <div class="helmet-top"></div>
+            <div class="face-plate">
+                <div class="cheek left"></div>
+                <div class="cheek right"></div>
+            </div>
+            <div class="jaw">
+                <div class="mouth-grille">
+                    <div class="grille-line"></div>
+                    <div class="grille-line"></div>
+                    <div class="grille-line"></div>
+                    <div class="grille-line"></div>
+                </div>
+            </div>
+            <div class="eye-socket left-eye avenger-eye-left">
+                <div class="eye-glow"></div>
+            </div>
+            <div class="eye-socket right-eye avenger-eye-right">
+                <div class="eye-glow"></div>
+            </div>
+        </div>
+        <div class="arc-reactor"></div>
+    </div>
+
+    <!-- Captain America Face -->
+    <div class="captain-america-container avenger-face" data-avenger="captain-america">
+        <div class="cap-face rotatable-face">
+            <div class="cap-helmet">
+                <div class="cap-helmet-shadow"></div>
+                <div class="cap-helmet-highlight"></div>
+                <div class="cap-a-symbol">A</div>
+                <div class="cap-wing left"></div>
+                <div class="cap-wing right"></div>
+            </div>
+            <div class="cap-skin">
+                <div class="cap-brow left"></div>
+                <div class="cap-brow right"></div>
+                <div class="cap-eye left avenger-eye-left"><div class="cap-eye-iris"><div class="cap-eye-pupil"></div></div></div>
+                <div class="cap-eye right avenger-eye-right"><div class="cap-eye-iris"><div class="cap-eye-pupil"></div></div></div>
+                <div class="cap-nose"></div>
+                <div class="cap-mouth"></div>
+                <div class="cap-chin"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spider-Man Face -->
+    <div class="spiderman-container avenger-face" data-avenger="spiderman">
+        <div class="spiderman-face rotatable-face">
+            <div class="spiderman-mask">
+                <div class="spiderman-web-pattern"></div>
+                <div class="spiderman-eye left avenger-eye-left">
+                    <div class="spiderman-eye-lens"></div>
+                </div>
+                <div class="spiderman-eye right avenger-eye-right">
+                    <div class="spiderman-eye-lens"></div>
+                </div>
+                <div class="spiderman-nose-area"></div>
+                <div class="spiderman-mouth-area"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hulk Face -->
+    <div class="hulk-container avenger-face" data-avenger="hulk">
+        <div class="hulk-face rotatable-face">
+            <div class="hulk-hair"></div>
+            <div class="hulk-skin">
+                <div class="hulk-brow-ridge"></div>
+                <div class="hulk-forehead-vein"></div>
+                <div class="hulk-eye left avenger-eye-left"><div class="hulk-eye-iris"><div class="hulk-eye-pupil"></div></div></div>
+                <div class="hulk-eye right avenger-eye-right"><div class="hulk-eye-iris"><div class="hulk-eye-pupil"></div></div></div>
+                <div class="hulk-nose"></div>
+                <div class="hulk-cheek-muscle left"></div>
+                <div class="hulk-cheek-muscle right"></div>
+                <div class="hulk-mouth">
+                    <div class="hulk-teeth"></div>
+                </div>
+                <div class="hulk-jaw"></div>
+                <div class="hulk-chin"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="main.js"></script>
+</body>
+</html>
